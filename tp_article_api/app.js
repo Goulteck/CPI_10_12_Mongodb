@@ -22,7 +22,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/tp_article_api");
 
 // Todo : Creer le modèle Article
 
-const Article = mongoose.model('Article', {name : String}, 'Articles');
+const Article = mongoose.model('Article', {title : String , content : String , author : String} , 'articles');
 
 // ================================================
 // Instancier un serveur et autoriser envokie json
@@ -43,12 +43,7 @@ app.get('/articles', async (request, response) => {
     // Attention asynchrome
     const articles = await Article.find();
 
-   // RG-001 : Si la liste est vide retourner un code 701
-    if (articles.length == 0){
-        return response.json({ code : "701"});
-    }
-
-   // RG-002 : Sinon la liste des produits
+   // RG-001 : Sinon la liste des produits
     return response.json(articles);
 });
 
@@ -60,23 +55,52 @@ app.get('/article/:id', async (request, response) => {
    // Récupérer dans la base, le produit avec l'id saisie
    const foundArticle = await Article.findOne({'_id' : idParam});
 
-    // RG-003 : Si l'id n'existe pas en base code 705
+    // RG-002 : Si l'id n'existe pas en base code 705
    if(!foundArticle){
-    return response.json({ code : "705"});
+    return response.json({ code : "702"});
    }
 
-   // RG-004 : Sinon on retourne le produit trouvé
+   // RG-002 : Sinon on retourne le produit trouvé
 
    return response.json(foundArticle);
  
 
 });
 app.post('/save-article', async (request, response) => {
-    return response.json({ message : "Va Créer ou modifiée un article"}); 
+    // Récupérer la requête
+    const articleJson = request.body;
+
+    // Envoyer le productJson dans mongodb
+    // -- Instancier le modele Product avec les donnée 
+    const article = new Article(articleJson)
+
+    // Donnée objet => language de prog (java, js, python)
+    // Donnée physique => Stockage de donnée (sql, nosql)
+    // -- Persisiter en base (envoyer dans le BDD)
+    await article.save();
+    
+    // RG-003 : Retourner un js
+    return response.json(article);
 
 });
 app.delete('/article/:id', async (request, response) => {
-    return response.json({ message : "Supprimera l'article de l'id choisie"}); 
+
+    /// Récupérer le param de l'url
+   const idParam = request.params.id;
+
+   // Récupérer dans la base, le produit avec l'id saisie
+   const foundArticle = await Article.findOne({'_id' : idParam});
+
+   // RG-004 : Si l'id n'existe pas en base code 705
+   if(!foundArticle){
+    return response.json({ code : "702"});
+   }
+
+   // RG-004 : l'article a bien été supprimer  
+   return response.json({ code : "200"});
+ 
+
+    
 });
 
 // ================================================
