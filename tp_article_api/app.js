@@ -18,7 +18,7 @@ mongoose.connection.on('error', () => {
 
 // Se connecter sur mongodb (async)
 // Ca prend x temps à s'executer
-mongoose.connect("mongodb://127.0.0.1:27017/db_demo");
+mongoose.connect("mongodb://127.0.0.1:27017/tp_article_api");
 
 // Todo : Creer le modèle Article
 
@@ -50,7 +50,6 @@ app.get('/articles', async (request, response) => {
 
    // RG-002 : Sinon la liste des produits
     return response.json(articles);
-
 });
 
 // URL  GET BY ID
