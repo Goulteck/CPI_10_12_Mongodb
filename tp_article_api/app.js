@@ -91,12 +91,13 @@ app.delete('/article/:id', async (request, response) => {
    // Récupérer dans la base, le produit avec l'id saisie
    const foundArticle = await Article.findOne({'_id' : idParam});
 
-   // RG-004 : Si l'id n'existe pas en base code 705
+   // RG-004 : Si l'id n'existe pas en base code 702
    if(!foundArticle){
     return response.json({ code : "702"});
    }
 
-   // RG-004 : l'article a bien été supprimer  
+   // RG-004 : l'article a bien été supprimer
+   await Article.deleteOne({'_id' : idParam});  
    return response.json({ code : "200"});
  
 
