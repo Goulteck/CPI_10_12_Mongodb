@@ -22,7 +22,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/db_demo");
 
 const Product = mongoose.model('Product', {name : String}, 'products');
 
-
 // Instancier le sereur grace à express
 const app = express();
 
